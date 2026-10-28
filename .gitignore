@@ -1,0 +1,24 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+*.secret.yaml
+*-secret.yaml
+
+# Cluster dumps and backups
+*backup*.yaml
+backups/
+dumps/
+
+# Kubeconfig files
+kubeconfig
+*.kubeconfig
+
+# Helm packaged charts
+*.tgz
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
