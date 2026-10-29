@@ -30,7 +30,7 @@ spec:
       - name: julcap-pull
       containers:
       - name: julcap-front-end
-        image: registry.julcap.net/julcap/front-end:935cdc43
+        image: registry.julcap.net/julcap/front-end:44096861
         resources:
           requests:
             memory: "64Mi"
