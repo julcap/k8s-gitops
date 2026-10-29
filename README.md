@@ -37,6 +37,6 @@ No secret values are stored in this repository. Workloads reference Kubernetes S
 * [x] Cluster baseline: networking, storage, private registry
 * [x] Application running with probes, resource limits and secrets
 * [x] External traffic through Traefik and an Ingress
-* [ ] GitOps with ArgoCD (app of apps)
+* [x] GitOps with ArgoCD (app of apps)
 * [ ] Secrets from Vault via External Secrets Operator
 * [ ] Hardening: NetworkPolicies, non root containers, PodDisruptionBudgets, ArgoCD Projects
