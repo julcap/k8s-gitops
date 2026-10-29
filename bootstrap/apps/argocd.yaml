@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm      # the Helm repo URL you used with helm repo add
+      chart: argo-cd            # the chart name
+      targetRevision: 10.11.6          # your pinned chart version
+      helm:
+        releaseName: argocd          # must match your existing install
+        valueFiles:
+          - $values/platform/argocd/values.yaml   # path to your values file in your repo
+    - repoURL: https://github.com/julcap/k8s-gitops
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: false
+    syncOptions:
+      - ServerSideApply=true
