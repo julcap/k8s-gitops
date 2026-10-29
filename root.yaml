@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd            # Applications always live in ArgoCD's namespace
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/julcap/k8s-gitops # your GitHub repo URL
+    targetRevision: main # the branch to follow
+    path: "bootstrap/apps" # the folder with your app manifests
+  destination:
+    server: https://kubernetes.default.svc   # "this same cluster"
+    namespace: argocd
+  syncPolicy:
+    automated:
+      enabled: true
+      selfHeal: true
+      prune: true
