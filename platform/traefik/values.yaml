@@ -1,5 +1,6 @@
 service:
-  type: NodePort
+  spec:
+    type: NodePort
 
 providers:
   kubernetesIngress:
@@ -7,7 +8,6 @@ providers:
       enabled: false
     ingressEndpoint:
       ip: 192.168.50.149
-
 
 ports:
   web:
