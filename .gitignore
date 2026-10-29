@@ -22,3 +22,6 @@ kubeconfig
 .idea/
 .vscode/
 *.swp
+
+# Custom paths
+platform/*/defaults.yaml
