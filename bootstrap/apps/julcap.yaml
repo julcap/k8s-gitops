@@ -2,9 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: julcap
-  labels:
-    team: julcap
   namespace: argocd            # Applications always live in ArgoCD's namespace
+labels:
+  team: julcap
 spec:
   project: default
   source:
