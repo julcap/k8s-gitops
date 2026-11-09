@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: booklore-nfs
+  namespace: booklore
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: ""
+  volumeMode: Filesystem
+  volumeName: booklore-nfs
+  resources:
+    requests:
+      storage: 100Gi

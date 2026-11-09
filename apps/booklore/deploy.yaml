@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: booklore
+  name: booklore
+  namespace: booklore
+spec:
+  ports:
+  - name: booklore-port
+    port: 6060 # The port where the service listens in the cluster
+    protocol: TCP
+    targetPort: 6060 # The container port
+    nodePort: 30060 # The external port on the node
+  selector:
+    app: booklore
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booklore
+  namespace: booklore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booklore
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: booklore
+    spec:
+      #affinity:
+      #  nodeAffinity:
+      #    preferredDuringSchedulingIgnoredDuringExecution:
+      #    - weight: 100
+      #      preference:
+      #        matchExpressions:
+      #        - key: kubernetes.io/hostname
+      #          operator: In
+      #          values: ["jca-ds10u"]
+      containers:
+      - name: booklore
+        image: docker.io/library/booklore-local:migrated
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: USER_ID
+          value: "1000"
+        - name: GROUP_ID
+          value: "1000"
+        - name: TZ
+          value: Etc/UTC
+        - name: DATABASE_URL
+          value: jdbc:mariadb://mariadb:3306/booklore
+        - name: DATABASE_USERNAME
+          value: booklore
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: booklore-db
+              key: password
+        - name: BOOKLORE_PORT
+          value: "6060"
+        - name: SWAGGER_ENABLED
+          value: "false"
+        - name: DISK_TYPE
+          value: NETWORK
+        volumeMounts:
+          - mountPath: /app/data
+            name: storage
+            subPath: data
+          - mountPath: /books
+            name: storage
+            subPath: books
+          - mountPath: /bookdrop
+            name: storage
+            subPath: bookdrop
+        ports:
+        - containerPort: 6060
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 6060
+            scheme: HTTP
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        resources: {}
+        # startupProbe, volumeMounts and volumes: paste the rest, dedented by 2
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: booklore-nfs
