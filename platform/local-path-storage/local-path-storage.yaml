@@ -49,10 +49,10 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: local-path-storage-role
+  name: local-path-provisioner-role
 subjects:
   - kind: ServiceAccount
-    name: local-path-storage-service-account
+    name: local-path-provisioner-service-account
     namespace: local-path-storage
 
 ---
@@ -63,10 +63,10 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: local-path-storage-role
+  name: local-path-provisioner-role
 subjects:
   - kind: ServiceAccount
-    name: local-path-storage-service-account
+    name: local-path-provisioner-service-account
     namespace: local-path-storage
 
 ---
@@ -85,13 +85,13 @@ spec:
       labels:
         app: local-path-provisioner
     spec:
-      serviceAccountName: local-path-storage-service-account
+      serviceAccountName: local-path-provisioner-service-account
       containers:
-        - name: local-path-storage
+        - name: local-path-provisioner
           image: docker.io/rancher/local-path-provisioner:v0.0.37
           imagePullPolicy: IfNotPresent
           command:
-            - local-path-storage
+            - local-path-provisioner
             - --debug
             - start
             - --config
@@ -157,7 +157,7 @@ data:
       "nodePathMap":[
         {
           "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
-          "paths":["/opt/local-path-storage"]
+          "paths":["/opt/local-path-provisioner"]
         }
       ]
     }
