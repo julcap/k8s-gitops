@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: local-path-storage
+
+resources:
+  - local-path-storage.yaml
+
+patches:
+  # strategic merge patch
+  - patch: |-
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        annotations:
+         storageclass.kubernetes.io/is-default-class: "true"
