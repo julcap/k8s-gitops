@@ -8,6 +8,13 @@ spec:
   - host: tools-k8s.julcap.net
     http:
       paths:
+#      - path: /api
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: api
+#            port:
+#              number: 5000
       - path: /
         pathType: Prefix
         backend:

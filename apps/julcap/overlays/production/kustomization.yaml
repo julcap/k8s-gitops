@@ -1,8 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Keep the existing namespace and resource names to preserve the database PVC.
 namespace: julcap-production
+
+labels:
+  - pairs:
+      env: production
+
 
 resources:
   - ../../base
@@ -15,12 +19,12 @@ images:
 
 replicas:
   - name: julcap-front-end
-    count: 5
+    count: 1
   - name: julcap-api
     count: 1
 
 patches:
-  - path: api.yaml
+  # JSON 6902 patch
   - target:
       kind: Ingress
       name: julcap-ingress
@@ -28,3 +32,17 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: tools-k8s.julcap.net
+  # strategic merge patch
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: julcap-api
+      spec:
+        template:
+          spec:
+            containers:
+              - name: julcap-api
+                env:
+                  - name: CORS_ORIGIN
+                    value: https://tools-k8s.julcap.net

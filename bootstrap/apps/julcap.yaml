@@ -4,7 +4,8 @@ metadata:
   name: julcap
   namespace: argocd            # Applications always live in ArgoCD's namespace
   labels:
-    team: julcap
+    env: production
+    app: julcap
 spec:
   project: default
   source:
@@ -13,9 +14,11 @@ spec:
     path: apps/julcap/overlays/production
   destination:
     server: https://kubernetes.default.svc   # "this same cluster"
-    namespace: default
+    namespace: julcap-production
   syncPolicy:
     automated:
       enabled: true
       selfHeal: true
       prune: true 
+    syncOptions:
+      - CreateNamespace=true
