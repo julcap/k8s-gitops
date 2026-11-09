@@ -28,6 +28,17 @@ spec:
     spec:
       imagePullSecrets:
       - name: julcap-pull
+      initContainers:
+        - name: wait-for-db
+          image: postgres:15-alpine
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h postgres -p 5432; do
+              echo "waiting for database"
+              sleep 2
+              done
       containers:
       - name: julcap-api
         image: registry.julcap.net/julcap/back-end:44096861
@@ -61,17 +72,11 @@ spec:
              secretKeyRef:
                name: jwt-secret
                key: JWT_SECRET
-         - name: CORS_ORIGIN
-           value: "https://tools-k8s.julcap.net"
          - name: RESEND_API_KEY
            valueFrom:
              secretKeyRef:
                name: resend-api-key
                key: RESEND_API_KEY
-         - name: EMAIL_PROVIDER
-           value: "resend"
-         - name: EMAIL_FROM
-           value: "main@julcap.net"
         ports:
         - containerPort: 5000
           name: liveness-port

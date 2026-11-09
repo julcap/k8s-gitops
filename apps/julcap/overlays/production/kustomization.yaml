@@ -46,3 +46,7 @@ patches:
                 env:
                   - name: CORS_ORIGIN
                     value: https://tools-k8s.julcap.net
+                  - name: EMAIL_PROVIDER
+                    value: "resend"
+                  - name: EMAIL_FROM
+                    value: "main@julcap.net"
