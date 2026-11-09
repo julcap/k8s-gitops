@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: julcap-staging
+  namespace: argocd
+  labels:
+    team: julcap
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/julcap/k8s-gitops
+    targetRevision: main
+    path: apps/julcap/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: julcap-staging
+  syncPolicy:
+    automated:
+      enabled: true
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
