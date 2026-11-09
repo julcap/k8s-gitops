@@ -18,9 +18,17 @@ GitOps repository for a three tier web application (frontend, backend API, Postg
 ```
 k8s-gitops/
 ├── README.md
+├── bootstrap/apps/     # ArgoCD Applications, including each Julcap environment
 └── apps/
-    └── julcap/          # the application: database, API, frontend, ingress
+    └── julcap/
+        ├── base/       # shared database, API, frontend, and ingress manifests
+        └── overlays/
+            ├── production/
+            └── staging/
 ```
+
+See [Julcap environments](apps/julcap/README.md) for environment configuration,
+staging setup, and release promotion.
 
 ## How changes flow
 

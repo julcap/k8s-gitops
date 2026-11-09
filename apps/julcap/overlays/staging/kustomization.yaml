@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: julcap-staging
+
+resources:
+  - ../../base
+
+images:
+  - name: registry.julcap.net/julcap/front-end
+    newTag: "44096861"
+  - name: registry.julcap.net/julcap/back-end
+    newTag: "44096861"
+
+replicas:
+  - name: julcap-front-end
+    count: 1
+  - name: julcap-api
+    count: 1
+
+patches:
+  - path: api.yaml
+  - target:
+      kind: Ingress
+      name: julcap-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: tools-k8s-staging.julcap.net
