@@ -44,7 +44,7 @@ spec:
       #          values: ["jca-ds10u"]
       containers:
       - name: booklore
-        image: docker.io/library/booklore-local:migrated
+        image: ghcr.io/booklore-app/booklore:v2.2.1
         imagePullPolicy: IfNotPresent
         env:
         - name: USER_ID
