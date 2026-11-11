@@ -44,7 +44,7 @@ spec:
       #          values: ["jca-ds10u"]
       containers:
       - name: booklore
-        image: docker.io/library/booklore-local:migrated
+        image: docker.io/daemonless/booklore:2.2.1 # old 1.5.1
         imagePullPolicy: IfNotPresent
         env:
         - name: USER_ID
