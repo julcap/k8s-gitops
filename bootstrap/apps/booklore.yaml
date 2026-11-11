@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: booklore
+  namespace: argocd            # Applications always live in ArgoCD's namespace
+  labels:
+    env: production
+    app: booklore
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/julcap/k8s-gitops # your GitHub repo URL
+    targetRevision: main # the branch to follow
+    path: apps/booklore
+  destination:
+    server: https://kubernetes.default.svc   # "this same cluster"
+    namespace: booklore
+  syncPolicy:
+    automated:
+      enabled: true
+      selfHeal: true
+      prune: true 
+    syncOptions:
+      - CreateNamespace=true
