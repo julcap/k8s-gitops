@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+name: node-feature-discovery
+  namespace: argocd # Application object must always live in argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://kubernetes-sigs.github.io/node-feature-discovery/chart # the Helm repo URL you used with helm repo add
+      chart: node-feature-discovery           # the chart name
+      targetRevision: 0.20.1   # your pinned chart version
+      helm:
+        releaseName: node-feature-discovery    # must match your existing install
+        valueFiles:
+          - $values/platform/node-feature-discovery/values.yaml   # path to your values file in your repo
+    - repoURL: https://github.com/julcap/k8s-gitops
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: node-feature-discovery
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNameSpace=true
