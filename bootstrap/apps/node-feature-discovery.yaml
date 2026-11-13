@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: node-feature-discovery
+  name: nfd
   namespace: argocd # Application object must always live in argocd
 spec:
   project: default
@@ -18,11 +18,11 @@ spec:
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: node-feature-discovery
+    namespace: nfd
   syncPolicy:
     automated:
       selfHeal: true
       prune: true
     syncOptions:
       - ServerSideApply=true
-      - CreateNameSpace=true
+      - CreateNamespace=true
