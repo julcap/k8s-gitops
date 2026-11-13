@@ -8,7 +8,7 @@ spec:
   sources:
     - repoURL: https://nvidia.github.io/k8s-device-plugin # Helm repo URL you used with helm repo add
       chart: nvidia-device-plugin            # the chart name
-       targetRevision: 0.20.1          # your pinned chart version
+      targetRevision: 0.20.1          # your pinned chart version
       helm:
         # releaseName: nvidia          # must match your existing install
         valueFiles:
@@ -16,6 +16,11 @@ spec:
     - repoURL: https://github.com/julcap/k8s-gitops
       targetRevision: main
       ref: values
+    - repoURL: https://github.com/julcap/k8s-gitops
+      targetRevision: main
+      path: platform/nvidia-device-plugin
+      directory:
+        include: 'runtimeclass.yaml'
   destination:
     server: https://kubernetes.default.svc
     namespace: nvidia
@@ -25,3 +30,4 @@ spec:
       prune: true
     syncOptions:
       - ServerSideApply=true
+      - CreateNamespace=true
