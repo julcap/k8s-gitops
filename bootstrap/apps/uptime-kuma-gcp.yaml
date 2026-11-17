@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: uptime-kuma-gcp
+  namespace: argocd
+  labels:
+    env: gcp
+    app: uptime-kuma
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # deleting the app also deletes what it created in GKE
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/julcap/k8s-gitops
+    targetRevision: main
+    path: apps/uptime-kuma
+  destination:
+    name: gke-lab
+    namespace: uptime-kuma
+  syncPolicy:
+    automated:
+      enabled: true
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
