@@ -3,6 +3,11 @@ kind: Kustomization
 
 namespace: julcap-develop
 
+labels:
+  - pairs:
+      env: develop
+
+
 resources:
   - ../../base
 
@@ -19,11 +24,71 @@ replicas:
     count: 1
 
 patches:
-  - path: api.yaml
+  # JSON 6902 patch
   - target:
       kind: Ingress
       name: julcap-ingress
     patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: tools-k8s-staging.julcap.net
+        value: stg-tools-k8s.julcap.net
+  - target:
+      kind: Service
+      name: postgres
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: develop
+  - target:
+      kind: StatefulSet
+      name: db
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: develop
+  - target:
+      kind: Service
+      name: api
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: develop
+  - target:
+      kind: Deployment
+      name: julcap-api
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: develop
+  - target:
+      kind: Service
+      name: front-end
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: develop
+  - target:
+      kind: Deployment
+      name: julcap-front-end
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: develop
+  # strategic merge patch
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: julcap-api
+      spec:
+        template:
+          spec:
+            containers:
+              - name: julcap-api
+                env:
+                  - name: CORS_ORIGIN
+                    value: https://stg-tools-k8s.julcap.net
+                  - name: EMAIL_PROVIDER
+                    value: "resend"
+                  - name: EMAIL_FROM
+                    value: "dev@julcap.net"
