@@ -32,6 +32,48 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: tools-k8s.julcap.net
+  - target:
+      kind: Service
+      name: postgres
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: production
+  - target:
+      kind: StatefulSet
+      name: db
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: production
+  - target:
+      kind: Service
+      name: api
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: production
+  - target:
+      kind: Deployment
+      name: julcap-api
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: production
+  - target:
+      kind: Service
+      name: front-end
+    patch: |-
+      - op: add
+        path: /spec/selector/env
+        value: production
+  - target:
+      kind: Deployment
+      name: julcap-front-end
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/env
+        value: production
   # strategic merge patch
   - patch: |-
       apiVersion: apps/v1
