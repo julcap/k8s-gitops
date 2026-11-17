@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack 
   namespace: argocd # Application object must always live in argocd
 spec:
   project: default
   sources:
     - repoURL: https://prometheus-community.github.io/helm-charts # the Helm repo URL you used with helm repo add
-      chart: prometheus           # the chart name
-      targetRevision: 29.47.2   # your pinned chart version
+      chart: kube-prometheus-stack            # the chart name
+      targetRevision: 92.14.1   # your pinned chart version
       helm:
         releaseName: prometheus   # must match your existing install
         valueFiles:
@@ -18,7 +18,7 @@ spec:
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: prometheus
+    namespace: kube-prometheus-stack 
   syncPolicy:
     automated:
       selfHeal: true
