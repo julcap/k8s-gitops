@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd # Application object must always live in argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts # the Helm repo URL you used with helm repo add
+      chart: grafana           # the chart name
+      targetRevision: 10.5.15   # your pinned chart version
+      helm:
+        releaseName: grafana    # must match your existing install
+        valueFiles:
+          - $values/platform/grafana/values.yaml   # path to your values file in your repo
+    - repoURL: https://github.com/julcap/k8s-gitops
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
